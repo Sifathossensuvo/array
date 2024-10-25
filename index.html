@@ -23,7 +23,7 @@
             opacity: 0; /* Start invisible */
             transition: opacity 1s ease; /* Fade in effect */
         }
-        #name, #hello{
+        #name, #hello, .Remove{
             padding: 10px;
             border-radius: 8px;
           
@@ -113,6 +113,12 @@
         .copy{
             color: #ccc;
         }
+        .Remove{
+margin-top: 10px;
+cursor: pointer;
+        }
+
+
     </style>
 </head>
 <body>
@@ -126,9 +132,13 @@
         <div class="leaf" style="left: 80%; animation-duration: 4.5s; animation-delay: 0.5s;"></div>
     </div>
 
+  <div class="input">
     <input type="text" id="name" placeholder="Enter your name" />
     <button id="hello" onclick="generatePoem()">Generate Poem</button>
-
+    <br>
+    <a href="hello.html"><button class="Remove">Remove data</button></a>
+  </div>
+<hr>
     <div id="poem"></div>
    </div>
    <h4 class="copy">&copy;Sifathosen.ph</h4>
