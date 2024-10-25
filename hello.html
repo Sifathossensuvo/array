@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Poem Generator with Bangla Translation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 49px;
+            overflow: hidden; /* Prevent scroll bars from appearing */
+        }
+
+        #poem {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-top: 20px;
+            font-size: 18px;
+            background-color: #f9f9f9;
+            white-space: pre-line;
+            text-align: left;
+            opacity: 0; /* Start invisible */
+            transition: opacity 1s ease; /* Fade in effect */
+        }
+        #name, #hello{
+            padding: 10px;
+            border-radius: 8px;
+          
+        }
+        .line-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            opacity: 0; /* Start invisible for each line */
+            animation: fadeIn 0.5s forwards; /* Animation for each line */
+        }
+
+        .line-container div {
+            width: 45%;
+        }
+
+        .line-container div.english {
+            text-align: left;
+        }
+
+        .line-container div.bangla {
+            text-align: right;
+            font-family: 'Noto Sans Bengali', sans-serif; /* Use a Bangla-compatible font */
+        }
+#hello{
+    cursor: pointer;
+}
+        /* Keyframe for line fade-in animation */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px); /* Start below */
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0); /* End at original position */
+            }
+        }
+
+        /* Animation for welcome effect */
+        .welcome {
+            position: relative;
+            opacity: 1;
+            animation: welcomeAnimation 2s forwards; /* Animate when page loads */
+        }
+
+        @keyframes welcomeAnimation {
+            0% {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        /* Leaf animation */
+        .leaf {
+            position: absolute;
+            top: -10%; /* Start from above the screen */
+            left: 50%; /* Center horizontally */
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            background-color: green; /* Leaf color */
+            border-radius: 10%; /* Rounded corners */
+            animation: fallAnimation linear infinite; /* Infinite falling animation */
+        }
+
+        @keyframes fallAnimation {
+            0% {
+                transform: translate(-50%, 0);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, 100vh); /* Fall to bottom of the viewport */
+                opacity: 0; /* Fade out */
+            }
+        }
+        .de{
+            border:  2px solid slategrey;
+            border-radius: 15px;
+        }
+        .copy{
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+
+   <div class="de">
+    <div class="welcome">
+        <h1>Inspiration poet AI</h1>
+        <div class="leaf" style="left: 20%; animation-duration: 3s; animation-delay: 0s;"></div>
+        <div class="leaf" style="left: 40%; animation-duration: 4s; animation-delay: 1s;"></div>
+        <div class="leaf" style="left: 60%; animation-duration: 3.5s; animation-delay: 2s;"></div>
+        <div class="leaf" style="left: 80%; animation-duration: 4.5s; animation-delay: 0.5s;"></div>
+    </div>
+
+    <input type="text" id="name" placeholder="Enter your name" />
+    <button id="hello" onclick="generatePoem()">Generate Poem</button>
+
+    <div id="poem"></div>
+   </div>
+   <h4 class="copy">&copy;Sifathosen.ph</h4>
+
+    <script>
+        const lineTemplates = [
+            { en: "[name], you stand strong and tall,", bn: "[name], তুমি দৃঢ় এবং উচ্চ দাঁড়িয়ে আছো," },
+            { en: "In the face of challenges, you never fall.", bn: "চ্যালেঞ্জের সামনে তুমি কখনও পড়ে যাও না।" },
+            { en: "With courage in your heart, you rise,", bn: "তোমার হৃদয়ে সাহস নিয়ে, তুমি উঠে আসো," },
+            { en: "Chasing dreams beneath the skies.", bn: "আকাশের নিচে স্বপ্নের পেছনে দৌড়াও।" },
+            { en: "Every setback is just a chance,", bn: "প্রত্যেকটি প্রতিবন্ধকতা একটি সুযোগ," },
+            { en: "To dance with life in a brave romance.", bn: "জীবনের সাথে সাহসী রোমাঞ্চে নাচতে।" },
+            { en: "So take a step and break the mold,", bn: "তাহলে এক পদক্ষেপ নাও এবং পুরানো কিছুকে ভাঙো," },
+            { en: "[name], your story is yet to be told.", bn: "[name], তোমার গল্প এখনও বলা হয়নি।" }
+        ];
+
+        let previousPoems = [];
+
+        function generatePoem() {
+            const name = document.getElementById('name').value || "Friend"; // Default name is "Friend" if none entered
+            let poem = '';
+            let poemLength = lineTemplates.length; // Use all lines
+
+            while (true) {
+                let poemLines = [];
+                for (let i = 0; i < poemLength; i++) {
+                    const line = lineTemplates[i];
+                    
+                    // Replace the placeholder [name] with the user's input
+                    const englishLine = line.en.replace("[name]", name);
+                    const banglaLine = line.bn.replace("[name]", name);
+                    
+                    poemLines.push({ en: englishLine, bn: banglaLine });
+                }
+
+                // Add English and Bangla translations side by side
+                poem = `${name.charAt(0).toUpperCase() + name.slice(1)}'s Poem\n\n`;
+                poemLines.forEach((line, index) => {
+                    setTimeout(() => {
+                        const lineContainer = document.createElement('div');
+                        lineContainer.classList.add('line-container');
+                        lineContainer.innerHTML = `
+                            <div class="english">${line.en}</div>
+                            <div class="bangla">${line.bn}</div>
+                        `;
+                        document.getElementById('poem').appendChild(lineContainer);
+
+                        // Trigger the fade-in effect
+                        lineContainer.style.animationDelay = `${index * 0.5}s`; // Staggered animation
+                    }, index * 1000); // Delay for each line
+                });
+
+                // Check if the poem is unique
+                if (!previousPoems.includes(poem)) {
+                    previousPoems.push(poem);
+                    break;
+                }
+            }
+
+            document.getElementById('poem').style.opacity = 1; // Fade in the whole poem container
+        }
+
+        // Trigger the welcome effect
+        document.addEventListener('DOMContentLoaded', () => {
+            const welcomeDiv = document.querySelector('.welcome');
+            welcomeDiv.style.opacity = 1; // Fade in the welcome message
+        });
+    </script>
+
+</body>
+</html>
